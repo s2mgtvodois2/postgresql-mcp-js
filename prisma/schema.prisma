@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Environment {
+  DEV
+  STAGE
+  PROD
+}
+
+enum ConnectionRole {
+  READ
+  READWRITE
+}
+
+model Session {
+  id          String               @id @default(cuid())
+  label       String?
+  createdAt   DateTime             @default(now())
+  expiresAt   DateTime?
+  lastUsedAt  DateTime?
+  connections SessionConnection[]
+
+  @@index([createdAt])
+  @@index([expiresAt])
+}
+
+model Connection {
+  id           String               @id @default(cuid())
+  alias        String               @unique
+  environment  Environment
+  role         ConnectionRole
+  driver       String               @default("postgresql")
+  description  String?
+  encryptedUrl Bytes
+  salt         Bytes
+  iv           Bytes
+  keyVersion   Int                  @default(1)
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  lastUsedAt   DateTime?
+  isArchived   Boolean              @default(false)
+  sessions     SessionConnection[]
+  stats        ConnectionStats?
+
+  @@index([environment, role])
+  @@index([isArchived])
+  @@index([lastUsedAt])
+}
+
+model SessionConnection {
+  sessionId    String
+  connectionId String
+  attachedAt   DateTime   @default(now())
+  session      Session    @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  connection   Connection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+
+  @@id([sessionId, connectionId])
+  @@index([connectionId])
+}
+
+model ConnectionStats {
+  connectionId      String   @id
+  lastHealthCheckAt DateTime?
+  lastLatencyMs     Int?
+  errorCount        Int      @default(0)
+  connection        Connection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+}

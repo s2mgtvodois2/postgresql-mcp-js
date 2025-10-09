@@ -1,0 +1,105 @@
+name: Bug Report
+description: Report a bug or issue with the PostgreSQL MCP Server
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the information below.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: Tell us what went wrong
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Configure with '...'
+        2. Run command '....'
+        3. Execute tool '....'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: Describe the expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened?
+      placeholder: Describe what actually happened
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Please paste any relevant error messages or logs
+      render: shell
+      placeholder: Paste logs here
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      description: What environment are you running in?
+      options:
+        - Bun (Local)
+        - Node.js (Local)
+        - Docker
+        - Cloud/Remote
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: bun-version
+    attributes:
+      label: Bun Version
+      description: Output of `bun --version`
+      placeholder: e.g., 1.2.22
+
+  - type: input
+    id: postgres-version
+    attributes:
+      label: PostgreSQL Version
+      description: Output of `SELECT version();`
+      placeholder: e.g., PostgreSQL 15.3
+
+  - type: dropdown
+    id: mcp-client
+    attributes:
+      label: MCP Client
+      description: Which MCP client are you using?
+      options:
+        - Claude Desktop
+        - MCP Inspector
+        - Custom Client
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here
+      placeholder: Any additional information that might help
